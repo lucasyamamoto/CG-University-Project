@@ -1,3 +1,6 @@
+# Trabalho Prático p/ Computação Gráfica, 2022
+# Anderson Gonçalves, Luca Alexander, Lucas Machado, Lucas Yamamoto, Mateus Penteado
+
 import glfw
 import sys
 import numpy as np
