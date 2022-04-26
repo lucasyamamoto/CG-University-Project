@@ -59,6 +59,13 @@ def init_window():
     return window
 
 
+def check_objective(shape, shape_position, shape_objective):
+    if np.abs(shape.input.t['x'] - shape_position.input.t['x']) < 10 and \
+            np.abs(shape.input.t['y'] - shape_position.input.t['y']) < 10 :
+        shape_objective.add_color(0, 1, 0)
+    else:
+        shape_objective.add_color(1, 0, 0)
+
 def main():
     window = init_window()
     locations = init_opengl()
@@ -98,7 +105,8 @@ def main():
     ico.add_rotation('z', r.random())
 
     dode = dodecahedron()
-    dode.add_scale(0.15, 0.15, 0.15)
+    dode.add_scale(0.10, 0.10, 0.10)
+    dode.add_translation(0, 150, 0)
     dode.add_rotation('x', r.random())
     dode.add_rotation('y', r.random())
     dode.add_rotation('z', r.random())
@@ -110,6 +118,51 @@ def main():
 
     g = grid()
 
+    # Shapes used to indicate the correct position
+
+    tetra_position = tetrahedron()
+    tetra_position.add_scale(0.10, 0.10, 0.10)
+    tetra_position.add_rotation('y', math.pi/4)
+    tetra_position.add_translation(-350, 0, 100)
+
+    cube_position = cube()
+    cube_position.add_scale(0.10, 0.10, 0.10)
+    cube_position.add_translation(-175, 0, 100)
+
+    octa_position = octahedron()
+    octa_position.add_scale(0.10, 0.10, 0.10)
+    octa_position.add_translation(0, 0, 100)
+
+    ico_position = icosahedron()
+    ico_position.add_scale(0.06, 0.06, 0.06)
+    ico_position.add_translation(175, 0, 100)
+
+    dode_position = dodecahedron()
+    dode_position.add_scale(0.06, 0.06, 0.06)
+    dode_position.add_translation(350, 0, 100)
+
+    # Planes used to indicate the objective status
+
+    tetra_objective = plane()
+    tetra_objective.add_scale(0.1, 0.01, 0.1)
+    tetra_objective.add_translation(-350, -100, -100)
+
+    cube_objective = plane()
+    cube_objective.add_scale(0.1, 0.01, 0.1)
+    cube_objective.add_translation(-175, -100, -100)
+
+    octa_objective = plane()
+    octa_objective.add_scale(0.1, 0.01, 0.1)
+    octa_objective.add_translation(0, -100, -100)
+
+    ico_objective = plane()
+    ico_objective.add_scale(0.1, 0.01, 0.1)
+    ico_objective.add_translation(175, -100, -100)
+
+    dode_objective = plane()
+    dode_objective.add_scale(0.1, 0.01, 0.1)
+    dode_objective.add_translation(350, -100, -100)
+
     ### Shapes here - End ###
 
     shapes.append(tetra)
@@ -120,8 +173,20 @@ def main():
     shapes.append(select)
     shapes.append(g)
 
+    shapes.append(tetra_position)
+    shapes.append(cube_position)
+    shapes.append(octa_position)
+    shapes.append(ico_position)
+    shapes.append(dode_position)
+
+    shapes.append(cube_objective)
+    shapes.append(tetra_objective)
+    shapes.append(octa_objective)
+    shapes.append(ico_objective)
+    shapes.append(dode_objective)
+
     create_shapes(shapes, locations)
-    amount_with_input = 5
+    amount_with_input = 5 # first 5 shapes have input
 
     glfw.set_key_callback(window,key_event)
     while not glfw.window_should_close(window):
@@ -153,6 +218,12 @@ def main():
         select.add_rotation('x', math.pi/80)
         select.add_rotation('y', math.pi/80)
         select.add_rotation('z', math.pi/80)
+
+        check_objective(tetra, tetra_position, tetra_objective)
+        check_objective(c, cube_position, cube_objective)
+        check_objective(octa, octa_position, octa_objective)
+        check_objective(ico, ico_position, ico_objective)
+        check_objective(dode, dode_position, dode_objective)
 
         update_shapes(shapes)
         draw_shapes(shapes, locations)
